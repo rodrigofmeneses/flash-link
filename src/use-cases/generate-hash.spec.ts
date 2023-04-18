@@ -66,5 +66,15 @@ describe("UrlShortener", () => {
 
       expect(urlRepository.urlCount).toBe(1)
     })
+
+    test("Should return a encoded_url", async () => {
+      const { sut, encoder } = makeSut()
+      const url = "any_url"
+      encoder.hash = "encoded_url"
+
+      const hash = await sut.generate(url)
+
+      expect(encoder.hash).toBe(hash)
+    })
   })
 })
