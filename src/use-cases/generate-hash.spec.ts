@@ -1,26 +1,7 @@
-interface UrlRepository {
-  add: (input: object) => Promise<string>
-  load: (url: string) => Promise<string | null>
-}
-interface Encoder {
-  encode: (url: string) => Promise<string>
-}
-class UrlShortener {
-  constructor(
-    private readonly repository: UrlRepository,
-    private readonly encoder: Encoder
-  ) {}
+import { UrlRepository } from "../infra/url-repository"
+import { Encoder } from "../utils/helpers/encoder"
+import { UrlShortener } from "./generate-hash"
 
-  async generate(url: string) {
-    let hash = await this.repository.load(url)
-    if (hash) {
-      return hash
-    }
-    hash = await this.encoder.encode(url)
-    this.repository.add({ url, hash })
-    return hash
-  }
-}
 class UrlRepositorySpy implements UrlRepository {
   urlCount = 0
   hash = ""
