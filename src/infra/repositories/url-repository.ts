@@ -1,4 +1,6 @@
+import { Url } from "../../domain/models/url"
+
 export interface UrlRepository {
-  add: (input: object) => Promise<string>
-  load: (url: string) => Promise<string | null>
+  add: (url: Url) => Promise<Url>
+  load: (longUrl: string) => Promise<Url | null>
 }

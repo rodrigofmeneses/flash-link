@@ -1,27 +1,34 @@
 import { UrlRepository } from "../../infra/repositories/url-repository"
 import { Encoder } from "../../utils/helpers/encoder"
+import { Url } from "../models/url"
 import { UrlShortener } from "./generate-hash"
 
 class UrlRepositorySpy implements UrlRepository {
   urlCount = 0
-  hash = ""
+  url: Url | null = null
 
-  async load(url: string) {
-    return this.hash
+  async load(longUrl: string) {
+    return this.url
   }
 
-  async add(input: object) {
+  async add(Url: Url) {
     this.urlCount++
-    return this.hash
+    return this.url || Url
   }
 }
 
 class EncoderSpy implements Encoder {
-  hash = ""
-  async encode(url: string) {
-    return this.hash
+  encoded = ""
+  async encode(id: number) {
+    return this.encoded
   }
 }
+
+const fakeUrl = () => ({
+  id: 0,
+  shortUrl: "encoded_url",
+  longUrl: "any_url",
+})
 
 const makeSut = () => {
   const urlRepository = new UrlRepositorySpy()
@@ -39,36 +46,36 @@ describe("UrlShortener", () => {
     })
   })
 
-  describe("When generate a hash", () => {
-    test("Should add url and hash to db", async () => {
+  describe("When perform", () => {
+    test("Should add url registry to db", async () => {
       const { sut, urlRepository } = makeSut()
-      const url = "any_url"
+      const longUrl = "any_url"
 
-      await sut.generate(url)
+      await sut.perform(longUrl)
 
       expect(urlRepository.urlCount).toBe(1)
     })
 
-    test("Should return a encoded_url", async () => {
-      const { sut, encoder } = makeSut()
-      const url = "any_url"
-      encoder.hash = "encoded_url"
+    test("Should return a url registry", async () => {
+      const { sut, urlRepository } = makeSut()
+      const longUrl = "any_url"
+      urlRepository.url = fakeUrl()
 
-      const hash = await sut.generate(url)
+      const Url = await sut.perform(longUrl)
 
-      expect(encoder.hash).toBe(hash)
+      expect(urlRepository.url).toEqual(Url)
     })
 
-    test("Should return a encoded_url stored in db", async () => {
+    test("Should return a url registry stored in db", async () => {
       const { sut, urlRepository } = makeSut()
-      const url = "db_url"
+      const longUrl = fakeUrl().longUrl
       urlRepository.urlCount = 1
-      urlRepository.hash = "encoded_db_url"
+      urlRepository.url = fakeUrl()
 
-      const hash = await sut.generate(url)
+      const Url = await sut.perform(longUrl)
 
       expect(urlRepository.urlCount).toBe(1)
-      expect(urlRepository.hash).toBe(hash)
+      expect(urlRepository.url).toEqual(Url)
     })
   })
 })

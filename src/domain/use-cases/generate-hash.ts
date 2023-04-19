@@ -1,5 +1,6 @@
 import { UrlRepository } from "../../infra/repositories/url-repository"
 import { Encoder } from "../../utils/helpers/encoder"
+import { Url } from "../models/url"
 
 export class UrlShortener {
   constructor(
@@ -7,13 +8,14 @@ export class UrlShortener {
     private readonly encoder: Encoder
   ) {}
 
-  async generate(url: string) {
-    let hash = await this.repository.load(url)
-    if (hash) {
-      return hash
+  async perform(longUrl: string): Promise<Url> {
+    let url = await this.repository.load(longUrl)
+    if (url) {
+      return url
     }
-    hash = await this.encoder.encode(url)
-    this.repository.add({ url, hash })
-    return hash
+    const id = 1
+    const shortUrl = await this.encoder.encode(id)
+    url = await this.repository.add({ id, shortUrl, longUrl })
+    return url
   }
 }

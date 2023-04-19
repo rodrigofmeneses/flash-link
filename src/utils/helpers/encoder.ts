@@ -1,3 +1,3 @@
 export interface Encoder {
-  encode: (url: string) => Promise<string>
+  encode: (id: number) => Promise<string>
 }
