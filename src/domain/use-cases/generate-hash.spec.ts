@@ -1,5 +1,6 @@
 import { UrlRepository } from "../../infra/repositories/url-repository"
 import { Encoder } from "../../utils/helpers/encoder"
+import { RandomNumberGenerator } from "../../utils/helpers/number-generator"
 import { Url } from "../models/url"
 import { UrlShortener } from "./generate-hash"
 
@@ -24,6 +25,13 @@ class EncoderSpy implements Encoder {
   }
 }
 
+class NumberGeneratorSpy implements RandomNumberGenerator {
+  randomNumber = 0
+  async generate() {
+    return this.randomNumber
+  }
+}
+
 const fakeUrl = () => ({
   id: 0,
   shortUrl: "encoded_url",
@@ -33,8 +41,9 @@ const fakeUrl = () => ({
 const makeSut = () => {
   const urlRepository = new UrlRepositorySpy()
   const encoder = new EncoderSpy()
-  const sut = new UrlShortener(urlRepository, encoder)
-  return { sut, urlRepository, encoder }
+  const generator = new NumberGeneratorSpy()
+  const sut = new UrlShortener(urlRepository, encoder, generator)
+  return { sut, urlRepository, encoder, generator }
 }
 
 describe("UrlShortener", () => {
@@ -56,26 +65,36 @@ describe("UrlShortener", () => {
       expect(urlRepository.urlCount).toBe(1)
     })
 
-    test("Should return a url registry", async () => {
+    test("Should return an url registry", async () => {
       const { sut, urlRepository } = makeSut()
       const longUrl = "any_url"
       urlRepository.url = fakeUrl()
 
-      const Url = await sut.perform(longUrl)
+      const url = await sut.perform(longUrl)
 
-      expect(urlRepository.url).toEqual(Url)
+      expect(urlRepository.url).toEqual(url)
     })
 
-    test("Should return a url registry stored in db", async () => {
+    test("Should return an url registry when longUrl is stored in db", async () => {
       const { sut, urlRepository } = makeSut()
       const longUrl = fakeUrl().longUrl
       urlRepository.urlCount = 1
       urlRepository.url = fakeUrl()
 
-      const Url = await sut.perform(longUrl)
+      const url = await sut.perform(longUrl)
 
       expect(urlRepository.urlCount).toBe(1)
-      expect(urlRepository.url).toEqual(Url)
+      expect(urlRepository.url).toEqual(url)
+    })
+
+    test("should generate a random id", async () => {
+      const { sut, generator } = makeSut()
+      const longUrl = "any_url"
+      generator.randomNumber = 42
+
+      const url = await sut.perform(longUrl)
+
+      expect(generator.randomNumber).toBe(url.id)
     })
   })
 })
