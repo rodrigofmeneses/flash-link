@@ -1,5 +1,5 @@
-import { UrlRepository } from "../infra/url-repository"
-import { Encoder } from "../utils/helpers/encoder"
+import { UrlRepository } from "../../infra/repositories/url-repository"
+import { Encoder } from "../../utils/helpers/encoder"
 import { UrlShortener } from "./generate-hash"
 
 class UrlRepositorySpy implements UrlRepository {
