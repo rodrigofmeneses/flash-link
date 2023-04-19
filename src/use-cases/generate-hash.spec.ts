@@ -42,8 +42,9 @@ describe("UrlShortener", () => {
   describe("When generate a hash", () => {
     test("Should add url and hash to db", async () => {
       const { sut, urlRepository } = makeSut()
+      const url = "any_url"
 
-      await sut.generate("any_url")
+      await sut.generate(url)
 
       expect(urlRepository.urlCount).toBe(1)
     })
@@ -56,6 +57,18 @@ describe("UrlShortener", () => {
       const hash = await sut.generate(url)
 
       expect(encoder.hash).toBe(hash)
+    })
+
+    test("Should return a encoded_url stored in db", async () => {
+      const { sut, urlRepository } = makeSut()
+      const url = "db_url"
+      urlRepository.urlCount = 1
+      urlRepository.hash = "encoded_db_url"
+
+      const hash = await sut.generate(url)
+
+      expect(urlRepository.urlCount).toBe(1)
+      expect(urlRepository.hash).toBe(hash)
     })
   })
 })
