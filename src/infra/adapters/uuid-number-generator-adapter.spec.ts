@@ -1,14 +1,4 @@
-import { RandomNumberGenerator } from "../../utils/helpers/number-generator"
-import { parse, v4 as uuid } from "uuid"
-
-class UuidNumberGeneratorAdapter implements RandomNumberGenerator {
-  async generate() {
-    let parsedUuid = parse(uuid())
-    let buffer = Buffer.from(parsedUuid)
-    let result = buffer.readUInt32BE(0)
-    return result
-  }
-}
+import { UuidNumberGeneratorAdapter } from "./uuid-number-generator-adapter"
 
 describe("UuidNumberGeneratorAdapter", () => {
   describe("When generate", () => {
