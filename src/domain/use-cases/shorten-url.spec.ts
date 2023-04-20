@@ -2,7 +2,7 @@ import { UrlRepository } from "../../infra/repositories/url-repository"
 import { Encoder } from "../../utils/helpers/encoder"
 import { RandomNumberGenerator } from "../../utils/helpers/number-generator"
 import { Url } from "../models/url"
-import { UrlShortener } from "./generate-hash"
+import { UrlShortener } from "./shorten-url"
 
 class UrlRepositorySpy implements UrlRepository {
   urlCount = 0
