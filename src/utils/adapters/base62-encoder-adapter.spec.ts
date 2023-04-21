@@ -26,5 +26,15 @@ describe("Base62Adapter", () => {
 
       expect(base62value).toBe(expected)
     })
+
+    test("should throw if invalid string is provided", async () => {
+      const sut = makeSut()
+
+      for (let value of "/*-+|%$!@#?") {
+        const promise = sut.decode(value)
+
+        expect(promise).rejects.toThrow()
+      }
+    })
   })
 })

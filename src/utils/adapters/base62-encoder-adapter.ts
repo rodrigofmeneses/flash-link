@@ -21,6 +21,9 @@ export class Base62EncoderAdapter implements Encoder {
   }
 
   async decode(shortUrl: string) {
+    if (shortUrl.split("").some((value) => !this.CHARACTERS.includes(value))) {
+      throw new Error()
+    }
     return 0
   }
 }
