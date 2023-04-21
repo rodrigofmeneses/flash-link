@@ -1,11 +1,6 @@
+import { fakeUrl } from "./mocks/fakes"
 import { EncoderSpy, NumberGeneratorSpy, UrlRepositorySpy } from "./mocks/spys"
 import { UrlShortener } from "./shorten-url"
-
-const fakeUrl = () => ({
-  id: 0,
-  shortUrl: "encoded_url",
-  longUrl: "any_url",
-})
 
 const makeSut = () => {
   const urlRepository = new UrlRepositorySpy()
