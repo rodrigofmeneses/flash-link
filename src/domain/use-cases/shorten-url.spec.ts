@@ -1,36 +1,5 @@
-import { UrlRepository } from "../../infra/repositories/url-repository"
-import { Encoder } from "../../utils/helpers/encoder"
-import { RandomNumberGenerator } from "../../utils/helpers/number-generator"
-import { Url } from "../models/url"
+import { EncoderSpy, NumberGeneratorSpy, UrlRepositorySpy } from "./mocks/spys"
 import { UrlShortener } from "./shorten-url"
-
-class UrlRepositorySpy implements UrlRepository {
-  urlCount = 0
-  url: Url | null = null
-
-  async load(longUrl: string) {
-    return this.url
-  }
-
-  async add(Url: Url) {
-    this.urlCount++
-    return this.url || Url
-  }
-}
-
-class EncoderSpy implements Encoder {
-  encoded = ""
-  async encode(id: number) {
-    return this.encoded
-  }
-}
-
-class NumberGeneratorSpy implements RandomNumberGenerator {
-  randomNumber = 0
-  async generate() {
-    return this.randomNumber
-  }
-}
 
 const fakeUrl = () => ({
   id: 0,
