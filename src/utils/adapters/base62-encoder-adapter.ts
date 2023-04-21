@@ -24,6 +24,13 @@ export class Base62EncoderAdapter implements Encoder {
     if (shortUrl.split("").some((value) => !this.CHARACTERS.includes(value))) {
       throw new Error()
     }
-    return 0
+
+    let id = 0
+    for (let i = 0; i < shortUrl.length; i++) {
+      let remainder = this.CHARACTERS.indexOf(shortUrl[i])
+      let exponent = shortUrl.length - i - 1
+      id += remainder * 62 ** exponent
+    }
+    return id
   }
 }

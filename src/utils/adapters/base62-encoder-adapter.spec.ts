@@ -36,5 +36,18 @@ describe("Base62Adapter", () => {
         expect(promise).rejects.toThrow()
       }
     })
+
+    test.each([
+      ["0", 0],
+      ["a", 10],
+      ["2TX", 11157],
+      ["zn9edcu", 2009215674938],
+    ])("should decode correctly", async (shortUrl, expected) => {
+      const sut = makeSut()
+
+      const base10value = await sut.decode(shortUrl)
+
+      expect(base10value).toBe(expected)
+    })
   })
 })
