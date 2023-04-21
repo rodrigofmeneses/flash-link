@@ -19,4 +19,8 @@ export class Base62EncoderAdapter implements Encoder {
 
     return shortUrl.split("").reverse().join("")
   }
+
+  async decode(shortUrl: string) {
+    return 0
+  }
 }

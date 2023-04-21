@@ -1,29 +1,35 @@
-import { UrlRepository } from "../../infra/repositories/url-repository"
+import { LoadUrlByIdRepository } from "../../infra/repositories/url-repository"
+import { Encoder } from "../../utils/helpers/encoder"
 import { fakeUrl } from "./mocks/fakes"
-import { UrlRepositorySpy } from "./mocks/spys"
+import { EncoderSpy, LoadUrlByIdRepositorySpy } from "./mocks/spys"
 
 class UrlRedirector {
-  constructor(private readonly repository: UrlRepository) {}
-  async perform(shortUrl: string): Promise<number> {
-    const url = await this.repository.load(shortUrl)
+  constructor(
+    private readonly loadUrlByIdRepository: LoadUrlByIdRepository,
+    private readonly encoder: Encoder
+  ) {}
+  async perform(shortUrl: string): Promise<string> {
+    const id = await this.encoder.decode(shortUrl)
+    const url = await this.loadUrlByIdRepository.load(id)
     if (!url) {
       throw new Error()
     }
-    return 1
+    return url.longUrl
   }
 }
 
 const makeSut = () => {
-  const urlRepository = new UrlRepositorySpy()
-  const sut = new UrlRedirector(urlRepository)
-  return { sut, urlRepository }
+  const loadUrlByIdRepository = new LoadUrlByIdRepositorySpy()
+  const encoder = new EncoderSpy()
+  const sut = new UrlRedirector(loadUrlByIdRepository, encoder)
+  return { sut, loadUrlByIdRepository, encoder }
 }
 
 describe("UrlRedirector", () => {
-  describe("when an invalid shortUrl is provided (not in db)", () => {
+  describe("when an shortUrl provided is not in db", () => {
     test("should throws", () => {
       const { sut } = makeSut()
-      const shortUrl = "invalid_url"
+      const shortUrl = "missing_url"
 
       const promise = sut.perform(shortUrl)
 
@@ -31,15 +37,15 @@ describe("UrlRedirector", () => {
     })
   })
 
-  describe("when a valid shortUrl is provided (in db)", () => {
-    test("should return a positive number", async () => {
-      const { sut, urlRepository } = makeSut()
-      const shortUrl = "valid_url"
-      urlRepository.url = fakeUrl()
+  describe("when shortUrl in db is provided", () => {
+    test("should return a longUrl", async () => {
+      const { sut, loadUrlByIdRepository } = makeSut()
+      const shortUrl = "correct_url"
+      loadUrlByIdRepository.url = fakeUrl()
 
-      const id = await sut.perform(shortUrl)
+      const longUrl = await sut.perform(shortUrl)
 
-      expect(id).toBeGreaterThanOrEqual(0)
+      expect(longUrl).toBe(loadUrlByIdRepository.url.longUrl)
     })
   })
 })
