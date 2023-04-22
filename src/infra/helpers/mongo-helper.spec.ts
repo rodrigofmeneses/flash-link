@@ -1,16 +1,8 @@
 import { MongoMemoryServer } from "mongodb-memory-server"
-import mongoose, { Schema, model } from "mongoose"
-import { Url as IUrl } from "../../domain/models/url"
+import mongoose from "mongoose"
 import { fakeUrl } from "../../domain/use-cases/mocks/fakes"
+import { Url } from "./mongo-helper"
 let mongoServer: MongoMemoryServer
-
-const urlSchema = new Schema<IUrl>({
-  id: { type: Number, required: true },
-  shortUrl: { type: String, required: true },
-  longUrl: { type: String, required: true },
-})
-
-const Url = model<IUrl>("Url", urlSchema)
 
 describe("insert", () => {
   beforeAll(async () => {
