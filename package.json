@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test": "jest --watchAll"
+    "test": "jest --watchAll --runInBand --detectOpenHandles"
   },
   "keywords": [],
   "author": "Rodrigo Meneses",
@@ -14,10 +14,12 @@
     "@types/node": "^18.15.11",
     "@types/uuid": "^9.0.1",
     "jest": "^29.5.0",
+    "mongodb-memory-server": "^8.12.2",
     "ts-jest": "^29.1.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "mongoose": "^7.0.4",
     "uuid": "^9.0.0"
   }
 }
