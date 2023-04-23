@@ -1,4 +1,4 @@
-import { fakeUrl } from "./mocks/fakes"
+import { makeFakeUrl } from "./mocks/fakes"
 import { EncoderSpy, LoadUrlByIdRepositorySpy } from "./mocks/spys"
 import { UrlRedirector } from "./redirect-url"
 
@@ -25,7 +25,7 @@ describe("UrlRedirector", () => {
     test("should return a longUrl", async () => {
       const { sut, loadUrlByIdRepository } = makeSut()
       const shortUrl = "correct_url"
-      loadUrlByIdRepository.url = fakeUrl()
+      loadUrlByIdRepository.url = makeFakeUrl()
 
       const longUrl = await sut.perform(shortUrl)
 

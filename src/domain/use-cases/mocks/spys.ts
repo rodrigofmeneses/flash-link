@@ -6,7 +6,7 @@ import {
 import { Encoder } from "../../../utils/helpers/encoder"
 import { RandomNumberGenerator } from "../../../utils/helpers/number-generator"
 import { Url } from "../../models/url"
-import { fakeUrl } from "./fakes"
+import { makeFakeUrl } from "./fakes"
 
 export class LoadUrlByLongUrlRepositorySpy
   implements LoadUrlByLongUrlRepository
@@ -28,7 +28,7 @@ export class LoadUrlByIdRepositorySpy implements LoadUrlByIdRepository {
 
 export class AddUrlRepositorySpy implements AddUrlRepository {
   urlCount = 0
-  url: Url = fakeUrl()
+  url: Url = makeFakeUrl()
 
   async add(data: object) {
     this.urlCount++

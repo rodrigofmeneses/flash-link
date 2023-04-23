@@ -1,4 +1,4 @@
-import { fakeUrl } from "./mocks/fakes"
+import { makeFakeUrl } from "./mocks/fakes"
 import {
   AddUrlRepositorySpy,
   EncoderSpy,
@@ -49,7 +49,7 @@ describe("UrlShortener", () => {
     test("Should return an url registry", async () => {
       const { sut, loadUrlByLongUrlRepositorySpy } = makeSut()
       const longUrl = "any_url"
-      loadUrlByLongUrlRepositorySpy.url = fakeUrl()
+      loadUrlByLongUrlRepositorySpy.url = makeFakeUrl()
 
       const url = await sut.perform(longUrl)
 
@@ -59,9 +59,9 @@ describe("UrlShortener", () => {
     test("Should return an url registry when longUrl is stored in db", async () => {
       const { sut, addUrlRepositorySpy, loadUrlByLongUrlRepositorySpy } =
         makeSut()
-      const longUrl = fakeUrl().longUrl
+      const longUrl = makeFakeUrl().longUrl
       addUrlRepositorySpy.urlCount = 1
-      loadUrlByLongUrlRepositorySpy.url = fakeUrl()
+      loadUrlByLongUrlRepositorySpy.url = makeFakeUrl()
 
       const url = await sut.perform(longUrl)
 
