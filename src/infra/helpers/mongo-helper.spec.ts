@@ -1,10 +1,11 @@
 import { MongoMemoryServer } from "mongodb-memory-server"
 import mongoose from "mongoose"
-import { fakeUrl } from "../../domain/use-cases/mocks/fakes"
-import { Url } from "./mongo-helper"
-let mongoServer: MongoMemoryServer
+import { makeFakeUrl } from "../../domain/use-cases/mocks/fakes"
+import { UrlMongo } from "./mongo-helper"
 
 describe("insert", () => {
+  let mongoServer: MongoMemoryServer
+
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create()
 
@@ -19,10 +20,10 @@ describe("insert", () => {
   })
 
   test("should insert an url into collection", async () => {
-    const url = new Url(fakeUrl())
+    const url = new UrlMongo(makeFakeUrl())
 
     await url.save()
-    const dbUrl = await Url.findOne({ id: url.id })
+    const dbUrl = await UrlMongo.findOne({ id: url.id })
 
     expect(dbUrl?.longUrl).toBe(url.longUrl)
   })
