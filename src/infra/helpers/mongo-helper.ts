@@ -1,9 +1,15 @@
-import { Schema, model } from "mongoose"
+import { Document, Schema, model } from "mongoose"
 import { Url } from "../../domain/models/url"
 
-const urlSchema = new Schema<Url>({
-  id: { type: Number, required: true },
-  shortUrl: { type: String, required: true },
+export interface IUrl extends Document {
+  id: number
+  shortUrl: string
+  longUrl: string
+}
+
+const urlSchema = new Schema({
+  id: { type: Number, required: true, unique: true },
+  shortUrl: { type: String, required: true, unique: true },
   longUrl: { type: String, required: true },
 })
 
