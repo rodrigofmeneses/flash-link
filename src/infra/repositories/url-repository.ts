@@ -14,5 +14,5 @@ export interface LoadUrlByLongUrlRepository {
 }
 
 export interface AddUrlRepository {
-  add: (data: object) => Promise<Url>
+  add: (url: Url) => Promise<Url>
 }
