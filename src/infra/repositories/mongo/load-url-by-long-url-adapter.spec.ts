@@ -3,20 +3,9 @@ import {
   UrlMongo,
   inMemoryConnect,
   inMemoryDisconnect,
-  parseMongoDocumentToUrlOrNull,
 } from "../../helpers/mongo-helper"
-import { LoadUrlByLongUrlRepository } from "../url-repository"
 import { makeFakeUrl } from "../../../domain/use-cases/mocks/fakes"
-
-class MongoLoadUrlByLongUrlRepositoryAdapter
-  implements LoadUrlByLongUrlRepository
-{
-  async load(longUrl: string) {
-    const dbUrl = await UrlMongo.findOne({ longUrl })
-    const url = parseMongoDocumentToUrlOrNull(dbUrl)
-    return url
-  }
-}
+import { MongoLoadUrlByLongUrlRepositoryAdapter } from "./load-url-by-long-url-adapter"
 
 const makeSut = () => {
   return new MongoLoadUrlByLongUrlRepositoryAdapter()
