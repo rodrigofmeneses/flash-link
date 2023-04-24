@@ -8,9 +8,9 @@ export interface IUrl extends Document {
 }
 
 const urlSchema = new Schema({
-  id: { type: Number, required: true, unique: true },
-  shortUrl: { type: String, required: true, unique: true },
-  longUrl: { type: String, required: true },
+  id: { type: Number, required: true, index: { unique: true } },
+  shortUrl: { type: String, required: true },
+  longUrl: { type: String, required: true, index: { unique: true } },
 })
 
 export const UrlMongo = model<Url>("Url", urlSchema)
