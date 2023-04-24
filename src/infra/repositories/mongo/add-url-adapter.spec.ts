@@ -11,7 +11,9 @@ import { Url } from "../../../domain/models/url"
 
 class MongoAddUrlRepository implements AddUrlRepository {
   async add(url: Url) {
-    return url
+    const dbUrl = await UrlMongo.create(url)
+    const responseUrl = parseMongoDocumentToUrlOrNull(dbUrl) as Url
+    return responseUrl
   }
 }
 
@@ -20,11 +22,11 @@ const makeSut = () => {
 }
 describe("MongoAddUrlRepositoryAdapter", () => {
   let mongoServer: MongoMemoryServer
-  beforeAll(async () => {
+  beforeEach(async () => {
     mongoServer = await inMemoryConnect()
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await inMemoryDisconnect(mongoServer)
   })
 
@@ -36,6 +38,18 @@ describe("MongoAddUrlRepositoryAdapter", () => {
       const url = await sut.add(fakeUrl)
 
       expect(url).toEqual(fakeUrl)
+    })
+
+    test("should add in db", async () => {
+      const sut = makeSut()
+      const fakeUrl = makeFakeUrl()
+
+      const url = await sut.add(fakeUrl)
+      const dbUrl = parseMongoDocumentToUrlOrNull(
+        await UrlMongo.findOne({ id: fakeUrl.id })
+      )
+
+      expect(dbUrl).toEqual(url)
     })
   })
 })
