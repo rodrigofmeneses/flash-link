@@ -1,34 +1,14 @@
-import { MongoMemoryServer } from "mongodb-memory-server"
-import { Url } from "../../../domain/models/url"
-import { makeFakeUrl } from "../../../domain/use-cases/mocks/fakes"
-import { IUrl, UrlMongo } from "../../helpers/mongo-helper"
-import { LoadUrlByIdRepository } from "../url-repository"
 import mongoose from "mongoose"
-
-class MongoLoadUrlByIdRepository implements LoadUrlByIdRepository {
-  async load(id: number): Promise<Url | null> {
-    if (id < 0) {
-      throw new Error()
-    }
-
-    const url = await UrlMongo.findOne({ id })
-
-    return this.parseMongoToUrl(url)
-  }
-
-  parseMongoToUrl(url: IUrl | null) {
-    if (!url) {
-      return null
-    }
-    return { id: url.id, shortUrl: url.shortUrl, longUrl: url.longUrl }
-  }
-}
+import { MongoMemoryServer } from "mongodb-memory-server"
+import { makeFakeUrl } from "../../../domain/use-cases/mocks/fakes"
+import { UrlMongo } from "../../helpers/mongo-helper"
+import { MongoLoadUrlByIdRepositoryAdapter } from "./load-url-by-id-adapter"
 
 const makeSut = () => {
-  return new MongoLoadUrlByIdRepository()
+  return new MongoLoadUrlByIdRepositoryAdapter()
 }
 
-describe("MongoLoadUrlByIdRepository", () => {
+describe("MongoLoadUrlByIdRepositoryAdapter", () => {
   let mongoServer: MongoMemoryServer
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create()
