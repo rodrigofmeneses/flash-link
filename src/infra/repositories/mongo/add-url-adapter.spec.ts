@@ -6,16 +6,7 @@ import {
   parseMongoDocumentToUrlOrNull,
 } from "../../helpers/mongo-helper"
 import { makeFakeUrl } from "../../../domain/use-cases/mocks/fakes"
-import { AddUrlRepository } from "../url-repository"
-import { Url } from "../../../domain/models/url"
-
-class MongoAddUrlRepository implements AddUrlRepository {
-  async add(url: Url) {
-    const dbUrl = await UrlMongo.create(url)
-    const responseUrl = parseMongoDocumentToUrlOrNull(dbUrl) as Url
-    return responseUrl
-  }
-}
+import { MongoAddUrlRepository } from "./add-url-adapter"
 
 const makeSut = () => {
   return new MongoAddUrlRepository()
