@@ -1,7 +1,10 @@
-import mongoose from "mongoose"
 import { MongoMemoryServer } from "mongodb-memory-server"
 import { makeFakeUrl } from "../../../domain/use-cases/mocks/fakes"
-import { UrlMongo } from "../../helpers/mongo-helper"
+import {
+  UrlMongo,
+  inMemoryConnect,
+  inMemoryDisconnect,
+} from "../../helpers/mongo-helper"
 import { MongoLoadUrlByIdRepositoryAdapter } from "./load-url-by-id-adapter"
 
 const makeSut = () => {
@@ -11,16 +14,11 @@ const makeSut = () => {
 describe("MongoLoadUrlByIdRepositoryAdapter", () => {
   let mongoServer: MongoMemoryServer
   beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create()
-
-    const uri = mongoServer.getUri()
-    await mongoose.connect(uri)
+    mongoServer = await inMemoryConnect()
   })
 
   afterAll(async () => {
-    await mongoose.connection.dropDatabase()
-    await mongoose.connection.close()
-    await mongoServer.stop()
+    await inMemoryDisconnect(mongoServer)
   })
 
   describe("When invalid id is provided", () => {

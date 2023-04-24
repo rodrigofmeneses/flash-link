@@ -1,22 +1,17 @@
 import { MongoMemoryServer } from "mongodb-memory-server"
 import mongoose from "mongoose"
 import { makeFakeUrl } from "../../domain/use-cases/mocks/fakes"
-import { UrlMongo } from "./mongo-helper"
+import { UrlMongo, inMemoryConnect, inMemoryDisconnect } from "./mongo-helper"
 
 describe("insert", () => {
   let mongoServer: MongoMemoryServer
 
   beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create()
-
-    const uri = mongoServer.getUri()
-    await mongoose.connect(uri)
+    mongoServer = await inMemoryConnect()
   })
 
   afterAll(async () => {
-    await mongoose.connection.dropDatabase()
-    await mongoose.connection.close()
-    await mongoServer.stop()
+    await inMemoryDisconnect(mongoServer)
   })
 
   test("should insert an url into collection", async () => {
