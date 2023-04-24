@@ -51,9 +51,9 @@ describe("UrlShortener", () => {
       const longUrl = "any_url"
       loadUrlByLongUrlRepositorySpy.url = makeFakeUrl()
 
-      const url = await sut.perform(longUrl)
+      const shortUrl = await sut.perform(longUrl)
 
-      expect(loadUrlByLongUrlRepositorySpy.url).toEqual(url)
+      expect(loadUrlByLongUrlRepositorySpy.url.shortUrl).toEqual(shortUrl)
     })
 
     test("Should return an url registry when longUrl is stored in db", async () => {
@@ -63,22 +63,10 @@ describe("UrlShortener", () => {
       addUrlRepositorySpy.urlCount = 1
       loadUrlByLongUrlRepositorySpy.url = makeFakeUrl()
 
-      const url = await sut.perform(longUrl)
+      const shortUrl = await sut.perform(longUrl)
 
       expect(addUrlRepositorySpy.urlCount).toBe(1)
-      expect(loadUrlByLongUrlRepositorySpy.url).toEqual(url)
-    })
-
-    test("should generate a random id", async () => {
-      const { sut, generator, addUrlRepositorySpy } = makeSut()
-      const longUrl = "any_url"
-      const fake_random_number = 42
-      addUrlRepositorySpy.url.id = fake_random_number
-      generator.randomNumber = fake_random_number
-
-      const url = await sut.perform(longUrl)
-
-      expect(generator.randomNumber).toBe(url.id)
+      expect(loadUrlByLongUrlRepositorySpy.url.shortUrl).toEqual(shortUrl)
     })
   })
 })

@@ -14,14 +14,14 @@ export class UrlShortener {
     private readonly generator: RandomNumberGenerator
   ) {}
 
-  async perform(longUrl: string): Promise<Url> {
+  async perform(longUrl: string): Promise<string> {
     let url = await this.loadUrlByLongUrlRepository.load(longUrl)
     if (url) {
-      return url
+      return url.shortUrl
     }
     const id = await this.generator.generate()
     const shortUrl = await this.encoder.encode(id)
     url = await this.addRepository.add({ id, shortUrl, longUrl })
-    return url
+    return url.shortUrl
   }
 }
