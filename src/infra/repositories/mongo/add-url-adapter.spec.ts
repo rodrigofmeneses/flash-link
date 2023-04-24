@@ -52,4 +52,16 @@ describe("MongoAddUrlRepositoryAdapter", () => {
       expect(dbUrl).toEqual(url)
     })
   })
+
+  describe("When duplicated url", () => {
+    test("should throw", async () => {
+      const sut = makeSut()
+      const fakeUrl = makeFakeUrl()
+      await sut.add(fakeUrl)
+
+      const promise = sut.add(fakeUrl)
+
+      expect(promise).rejects.toThrow()
+    })
+  })
 })
