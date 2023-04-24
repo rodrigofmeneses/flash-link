@@ -14,6 +14,13 @@ const urlSchema = new Schema({
   longUrl: { type: String, required: true, index: { unique: true } },
 })
 
+export const parseMongoDocumentToUrlOrNull = (url: IUrl | null) => {
+  if (!url) {
+    return null
+  }
+  return { id: url.id, shortUrl: url.shortUrl, longUrl: url.longUrl }
+}
+
 export const inMemoryConnect = async () => {
   const mongoServer = await MongoMemoryServer.create()
   const uri = mongoServer.getUri()
