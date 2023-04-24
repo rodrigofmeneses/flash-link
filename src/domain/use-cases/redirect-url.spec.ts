@@ -1,11 +1,11 @@
 import { makeFakeUrl } from "./mocks/fakes"
-import { EncoderSpy, LoadUrlByIdRepositorySpy } from "./mocks/spys"
+import { EncoderSpy, LoadUrlByShortUrlRepositorySpy } from "./mocks/spys"
 import { UrlRedirector } from "./redirect-url"
 
 const makeSut = () => {
-  const loadUrlByIdRepository = new LoadUrlByIdRepositorySpy()
+  const loadUrlByIdRepository = new LoadUrlByShortUrlRepositorySpy()
   const encoder = new EncoderSpy()
-  const sut = new UrlRedirector(loadUrlByIdRepository, encoder)
+  const sut = new UrlRedirector(loadUrlByIdRepository)
   return { sut, loadUrlByIdRepository, encoder }
 }
 

@@ -1,14 +1,11 @@
-import { LoadUrlByIdRepository } from "../../infra/repositories/url-repository"
-import { Encoder } from "../../utils/helpers/encoder"
+import { LoadUrlByShortUrlRepository } from "../../infra/repositories/url-repository"
 
 export class UrlRedirector {
   constructor(
-    private readonly loadUrlByIdRepository: LoadUrlByIdRepository,
-    private readonly encoder: Encoder
+    private readonly loadUrlByShortUrlRepository: LoadUrlByShortUrlRepository
   ) {}
   async perform(shortUrl: string): Promise<string> {
-    const id = await this.encoder.decode(shortUrl)
-    const url = await this.loadUrlByIdRepository.load(id)
+    const url = await this.loadUrlByShortUrlRepository.load(shortUrl)
     if (!url) {
       throw new Error()
     }

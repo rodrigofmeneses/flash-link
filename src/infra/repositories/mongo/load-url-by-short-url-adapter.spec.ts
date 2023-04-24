@@ -5,13 +5,13 @@ import {
   inMemoryConnect,
   inMemoryDisconnect,
 } from "../../helpers/mongo-helper"
-import { MongoLoadUrlByIdRepositoryAdapter } from "./load-url-by-id-adapter"
+import { MongoLoadUrlByShortUrlRepositoryAdapter } from "./load-url-by-short-url-adapter"
 
 const makeSut = () => {
-  return new MongoLoadUrlByIdRepositoryAdapter()
+  return new MongoLoadUrlByShortUrlRepositoryAdapter()
 }
 
-describe("MongoLoadUrlByIdRepositoryAdapter", () => {
+describe("MongoLoadUrlByShortUrlRepositoryAdapter", () => {
   let mongoServer: MongoMemoryServer
   beforeAll(async () => {
     mongoServer = await inMemoryConnect()
@@ -21,33 +21,22 @@ describe("MongoLoadUrlByIdRepositoryAdapter", () => {
     await inMemoryDisconnect(mongoServer)
   })
 
-  describe("When invalid id is provided", () => {
-    test("should throws", async () => {
+  describe("When valid shortUrl is provided", () => {
+    test("should return null if longUrl is not found", async () => {
       const sut = makeSut()
-      const invalidNumber = -1
-
-      const promise = sut.load(invalidNumber)
-
-      expect(promise).rejects.toThrow()
-    })
-  })
-
-  describe("When valid id is provided", () => {
-    test("should return null if url not found", async () => {
-      const sut = makeSut()
-      const validNumber = 42
+      const validNumber = "not_in_db"
 
       const url = await sut.load(validNumber)
 
       expect(url).toBeNull()
     })
 
-    test("should return an url", async () => {
+    test("should return a longUrl", async () => {
       const sut = makeSut()
       const fakeUrl = makeFakeUrl()
       await new UrlMongo(fakeUrl).save()
 
-      const url = await sut.load(fakeUrl.id)
+      const url = await sut.load(fakeUrl.shortUrl)
 
       expect(url).toEqual(fakeUrl)
     })

@@ -1,6 +1,6 @@
 import {
   AddUrlRepository,
-  LoadUrlByIdRepository,
+  LoadUrlByShortUrlRepository,
   LoadUrlByLongUrlRepository,
 } from "../../../infra/repositories/url-repository"
 import { Encoder } from "../../../utils/helpers/encoder"
@@ -18,10 +18,12 @@ export class LoadUrlByLongUrlRepositorySpy
   }
 }
 
-export class LoadUrlByIdRepositorySpy implements LoadUrlByIdRepository {
+export class LoadUrlByShortUrlRepositorySpy
+  implements LoadUrlByShortUrlRepository
+{
   url: Url | null = null
 
-  async load(id: number) {
+  async load(input: string) {
     return this.url
   }
 }

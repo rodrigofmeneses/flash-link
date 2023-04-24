@@ -5,13 +5,13 @@ export interface UrlRepository {
   load: (longUrl: string) => Promise<Url | null>
 }
 
-export interface LoadUrlByIdRepository {
-  load: (id: number) => Promise<Url | null>
+interface LoadUrlByString {
+  load: (input: string) => Promise<Url | null>
 }
 
-export interface LoadUrlByLongUrlRepository {
-  load: (longUrl: string) => Promise<Url | null>
-}
+export interface LoadUrlByShortUrlRepository extends LoadUrlByString {}
+
+export interface LoadUrlByLongUrlRepository extends LoadUrlByString {}
 
 export interface AddUrlRepository {
   add: (url: Url) => Promise<Url>
