@@ -19,8 +19,9 @@ type HttpRequest = {
 }
 
 type HttpResponse = {
-  data: { [key: string]: string }
   status: number
+  data?: { [key: string]: string }
+  error?: Error
 }
 
 function isEmpty(obj: Record<string, any>): boolean {
@@ -32,12 +33,14 @@ class ShortenUrl {
 
   async route(httpRequest: HttpRequest): Promise<HttpResponse> {
     if (isEmpty(httpRequest.body) || !httpRequest.body.longUrl) {
-      throw new BadRequestError()
+      return {
+        status: 400,
+        error: new BadRequestError(),
+      }
     }
     const { longUrl } = httpRequest.body
     const shortUrl = await this.urlShorten.perform(longUrl)
-    const httpResponse: HttpResponse = { data: { shortUrl }, status: 200 }
-    return httpResponse
+    return { status: 200, data: { shortUrl } }
   }
 }
 
@@ -73,9 +76,9 @@ describe("ShortenUrlRoute", () => {
       const { sut } = makeSut()
       const httpRequestEmptyBody: HttpRequest = { body: {} }
 
-      const promise = sut.route(httpRequestEmptyBody)
+      const httpResponse = await sut.route(httpRequestEmptyBody)
 
-      expect(promise).rejects.toThrowError(new BadRequestError())
+      expect(httpResponse.error?.message).toBe(new BadRequestError().message)
     })
   })
 
@@ -88,7 +91,7 @@ describe("ShortenUrlRoute", () => {
 
       const httpResponse = await sut.route(httpRequest)
 
-      expect(httpResponse.data.shortUrl).toBe(fakeUrl.shortUrl)
+      expect(httpResponse.data?.shortUrl).toBe(fakeUrl.shortUrl)
       expect(httpResponse.status).toBe(200)
     })
   })
