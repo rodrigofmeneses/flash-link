@@ -1,3 +1,5 @@
+import { BadRequestError } from "../errors/bad-request-error"
+
 type HttpRequest = {
   body: { [key: string]: string }
   // param: { [key: string]: string }
@@ -16,19 +18,21 @@ function isEmpty(obj: Record<string, any>): boolean {
 class ShortenUrl {
   async route(httpRequest: HttpRequest) {
     if (isEmpty(httpRequest.body)) {
-      throw new Error()
+      throw new BadRequestError()
     }
     return true
   }
 }
 
 describe("ShortenUrlRoute", () => {
-  test("should throws if no body is provided", async () => {
-    const httpRequestEmptyBody: HttpRequest = { body: {} }
-    const sut = new ShortenUrl()
+  describe("When no body is provided", () => {
+    test("should throws BadRequestError", async () => {
+      const httpRequestEmptyBody: HttpRequest = { body: {} }
+      const sut = new ShortenUrl()
 
-    const promise = sut.route(httpRequestEmptyBody)
+      const promise = sut.route(httpRequestEmptyBody)
 
-    expect(promise).rejects.toThrow()
+      expect(promise).rejects.toThrowError(new BadRequestError())
+    })
   })
 })
