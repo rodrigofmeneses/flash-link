@@ -5,59 +5,10 @@ import {
   LoadUrlByLongUrlRepositorySpy,
   NumberGeneratorSpy,
 } from "../../domain/use-cases/mocks/spys"
-import { UrlShortener } from "../../domain/use-cases/shorten-url"
-import {
-  AddUrlRepository,
-  LoadUrlByLongUrlRepository,
-} from "../../infra/repositories/url-repository"
-import { Encoder } from "../../utils/helpers/encoder"
-import { RandomNumberGenerator } from "../../utils/helpers/number-generator"
 import { BadRequestError } from "../errors/bad-request-error"
-
-type HttpRequest = {
-  body: { [key: string]: string }
-}
-
-type HttpResponse = {
-  status: number
-  data?: { [key: string]: string }
-  error?: Error
-}
-
-function isEmpty(obj: Record<string, any>): boolean {
-  return Object.keys(obj).length === 0
-}
-
-class ShortenUrl {
-  constructor(private readonly urlShorten: UrlShortener) {}
-
-  async route(httpRequest: HttpRequest): Promise<HttpResponse> {
-    if (isEmpty(httpRequest.body) || !httpRequest.body.longUrl) {
-      return {
-        status: 400,
-        error: new BadRequestError(),
-      }
-    }
-    const { longUrl } = httpRequest.body
-    const shortUrl = await this.urlShorten.perform(longUrl)
-    return { status: 200, data: { shortUrl } }
-  }
-}
-
-class UrlShortenerSpy extends UrlShortener {
-  constructor(
-    loadUrlByLongUrlRepository: LoadUrlByLongUrlRepository,
-    addRepository: AddUrlRepository,
-    encoder: Encoder,
-    generator: RandomNumberGenerator
-  ) {
-    super(loadUrlByLongUrlRepository, addRepository, encoder, generator)
-  }
-  shortUrl: string = ""
-  async perform(longUrl: string) {
-    return this.shortUrl
-  }
-}
+import { HttpRequest } from "../helpers/http-request"
+import { UrlShortenerSpy } from "./mocks/spys"
+import { ShortenUrl } from "./shorten-url-route"
 
 const makeSut = () => {
   const urlShortener = new UrlShortenerSpy(
