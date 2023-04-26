@@ -13,6 +13,7 @@ export class ShortenUrlRoute {
       return {
         status: 400,
         error: new BadRequestError(),
+        data: { message: "Invalid body" },
       }
     }
     const { longUrl } = httpRequest.body
@@ -20,7 +21,11 @@ export class ShortenUrlRoute {
     try {
       shortUrl = await this.urlShorten.perform(longUrl)
     } catch (error) {
-      return { status: 500, error: new InternalServerError() }
+      return {
+        status: 500,
+        error: new InternalServerError(),
+        data: { message: "Internal Server Error" },
+      }
     }
     return { status: 200, data: { shortUrl } }
   }
