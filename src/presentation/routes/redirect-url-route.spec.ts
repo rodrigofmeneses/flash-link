@@ -17,12 +17,12 @@ const makeSut = () => {
 }
 
 describe("RedirectUrlRoute", () => {
-  describe("When no param is provided ", () => {
+  describe("When no params is provided ", () => {
     test("should throws NotFoundError", async () => {
       const { sut } = makeSut()
-      const httpRequestEmptyParam: HttpRequest = { param: {} }
+      const httpRequestEmptyparams: HttpRequest = { params: {} }
 
-      const httpResponse = await sut.route(httpRequestEmptyParam)
+      const httpResponse = await sut.route(httpRequestEmptyparams)
 
       expect(httpResponse.status).toBe(404)
       expect(httpResponse.error?.message).toBe(new NotFoundError().message)
@@ -32,11 +32,11 @@ describe("RedirectUrlRoute", () => {
   describe("When invalid shortUrl is provided", () => {
     test("should throws NotFoundError", async () => {
       const { sut } = makeSut()
-      const httpRequestEmptyParam: HttpRequest = {
-        param: { shortUrl: "invalidShortUrl" },
+      const httpRequestEmptyparams: HttpRequest = {
+        params: { shortUrl: "invalidShortUrl" },
       }
 
-      const httpResponse = await sut.route(httpRequestEmptyParam)
+      const httpResponse = await sut.route(httpRequestEmptyparams)
 
       expect(httpResponse.status).toBe(404)
       expect(httpResponse.error?.message).toBe(new NotFoundError().message)
@@ -49,7 +49,7 @@ describe("RedirectUrlRoute", () => {
       const fakeUrl = makeFakeUrl()
       loadUrlByShortUrlRepository.url = fakeUrl
       const httpRequest: HttpRequest = {
-        param: { shortUrl: fakeUrl.shortUrl },
+        params: { shortUrl: fakeUrl.shortUrl },
       }
 
       const httpResponse = await sut.route(httpRequest)
@@ -65,7 +65,9 @@ describe("RedirectUrlRoute", () => {
         new LoadUrlByShortUrlRepositoryWithErrorSpy()
       const urlRedirector = new UrlRedirector(loadUrlByShortUrlRepository)
       const sut = new RedirectUrlRoute(urlRedirector)
-      const anyHttpRequest: HttpRequest = { param: { shortUrl: "anyShortUrl" } }
+      const anyHttpRequest: HttpRequest = {
+        params: { shortUrl: "anyShortUrl" },
+      }
 
       const httpResponse = await sut.route(anyHttpRequest)
 
