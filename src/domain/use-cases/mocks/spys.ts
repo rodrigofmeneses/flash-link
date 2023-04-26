@@ -18,6 +18,14 @@ export class LoadUrlByLongUrlRepositorySpy
   }
 }
 
+export class LoadUrlByLongUrlRepositoryWithErrorSpy
+  implements LoadUrlByLongUrlRepository
+{
+  load(input: string): Promise<Url | null> {
+    throw new Error()
+  }
+}
+
 export class LoadUrlByShortUrlRepositorySpy
   implements LoadUrlByShortUrlRepository
 {

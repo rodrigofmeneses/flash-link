@@ -1,5 +1,6 @@
 import { UrlShortener } from "../../domain/use-cases/shorten-url"
 import { BadRequestError } from "../errors/bad-request-error"
+import { InternalServerError } from "../errors/internal-server-error"
 import { HttpRequest } from "../helpers/http-request"
 import { HttpResponse } from "../helpers/http-response"
 import { isEmpty } from "../helpers/is-empty"
@@ -15,7 +16,12 @@ export class ShortenUrlRoute {
       }
     }
     const { longUrl } = httpRequest.body
-    const shortUrl = await this.urlShorten.perform(longUrl)
+    let shortUrl: string = ""
+    try {
+      shortUrl = await this.urlShorten.perform(longUrl)
+    } catch (error) {
+      return { status: 500, error: new InternalServerError() }
+    }
     return { status: 200, data: { shortUrl } }
   }
 }

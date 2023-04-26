@@ -1,12 +1,15 @@
+import { Url } from "../../domain/models/url"
 import { makeFakeUrl } from "../../domain/use-cases/mocks/fakes"
 import {
   AddUrlRepositorySpy,
   EncoderSpy,
   LoadUrlByLongUrlRepositorySpy,
+  LoadUrlByLongUrlRepositoryWithErrorSpy,
   NumberGeneratorSpy,
 } from "../../domain/use-cases/mocks/spys"
 import { UrlShortener } from "../../domain/use-cases/shorten-url"
 import { BadRequestError } from "../errors/bad-request-error"
+import { InternalServerError } from "../errors/internal-server-error"
 import { HttpRequest } from "../helpers/http-request"
 import { ShortenUrlRoute } from "./shorten-url-route"
 
@@ -46,6 +49,29 @@ describe("ShortenUrlRoute", () => {
 
         expect(httpResponse.data?.shortUrl).toBe(fakeUrl.shortUrl)
         expect(httpResponse.status).toBe(200)
+      })
+    })
+    describe("When urlShortener throws", () => {
+      test("should throws InternalServerError ", async () => {
+        const loadUrlByLongUrlRepository =
+          new LoadUrlByLongUrlRepositoryWithErrorSpy()
+        const urlShortener = new UrlShortener(
+          loadUrlByLongUrlRepository,
+          new AddUrlRepositorySpy(),
+          new EncoderSpy(),
+          new NumberGeneratorSpy()
+        )
+        const sut = new ShortenUrlRoute(urlShortener)
+        const anyHttpRequest: HttpRequest = {
+          body: { longUrl: "anyLongUrl" },
+        }
+
+        const httpResponse = await sut.route(anyHttpRequest)
+
+        expect(httpResponse.status).toBe(500)
+        expect(httpResponse.error?.message).toBe(
+          new InternalServerError().message
+        )
       })
     })
   })
