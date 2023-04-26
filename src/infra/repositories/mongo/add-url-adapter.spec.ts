@@ -6,10 +6,10 @@ import {
   parseMongoDocumentToUrlOrNull,
 } from "../../helpers/mongo-helper"
 import { makeFakeUrl } from "../../../domain/use-cases/mocks/fakes"
-import { MongoAddUrlRepository } from "./add-url-adapter"
+import { MongoAddUrlRepositoryAdapter } from "./add-url-adapter"
 
 const makeSut = () => {
-  return new MongoAddUrlRepository()
+  return new MongoAddUrlRepositoryAdapter()
 }
 describe("MongoAddUrlRepositoryAdapter", () => {
   let mongoServer: MongoMemoryServer
