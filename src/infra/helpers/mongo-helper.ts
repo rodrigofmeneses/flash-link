@@ -27,9 +27,15 @@ export const inMemoryConnect = async () => {
   await mongoose.connect(uri)
   return mongoServer
 }
+
 export const inMemoryDisconnect = async (mongoServer: MongoMemoryServer) => {
   await mongoose.connection.dropDatabase()
   await mongoose.connection.close()
   await mongoServer.stop()
 }
+
 export const UrlMongo = model<Url>("Url", urlSchema)
+
+export const connectMongo = async (uri: string) => {
+  await mongoose.connect(uri)
+}
