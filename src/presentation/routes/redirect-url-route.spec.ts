@@ -1,45 +1,13 @@
-import { InvalidShortUrlError } from "../../domain/errors/invalid-short-url-error"
-import { LoadUrlByShortUrlRepositorySpy } from "../../domain/use-cases/mocks/spys"
+import {
+  LoadUrlByShortUrlRepositorySpy,
+  LoadUrlByShortUrlRepositoryWithErrorSpy,
+} from "../../domain/use-cases/mocks/spys"
 import { UrlRedirector } from "../../domain/use-cases/redirect-url"
 import { InternalServerError } from "../errors/internal-server-error"
 import { NotFoundError } from "../errors/not-found-error"
 import { HttpRequest } from "../helpers/http-request"
-import { HttpResponse } from "../helpers/http-response"
-import { isEmpty } from "../helpers/is-empty"
-import { LoadUrlByShortUrlRepository } from "../../infra/repositories/url-repository"
-import { Url } from "../../domain/models/url"
 import { makeFakeUrl } from "../../domain/use-cases/mocks/fakes"
-
-class RedirectUrlRoute {
-  constructor(private urlRedirector: UrlRedirector) {}
-
-  async route(httpRequest: HttpRequest): Promise<HttpResponse> {
-    if (isEmpty(httpRequest.param) || !httpRequest.param?.shortUrl) {
-      return { status: 404, error: new NotFoundError() }
-    }
-    const { shortUrl } = httpRequest.param
-    let longUrl: string = ""
-
-    try {
-      longUrl = await this.urlRedirector.perform(shortUrl)
-    } catch (error) {
-      if (error instanceof InvalidShortUrlError) {
-        return { status: 404, error: new NotFoundError() }
-      }
-      return { status: 500, error: new InternalServerError() }
-    }
-
-    return { status: 200, data: { longUrl } }
-  }
-}
-
-class LoadUrlByShortUrlRepositoryWithErrorSpy
-  implements LoadUrlByShortUrlRepository
-{
-  async load(input: string): Promise<Url | null> {
-    throw new Error()
-  }
-}
+import { RedirectUrlRoute } from "./redirect-url-route"
 
 const makeSut = () => {
   const loadUrlByShortUrlRepository = new LoadUrlByShortUrlRepositorySpy()

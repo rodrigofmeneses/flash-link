@@ -36,6 +36,14 @@ export class LoadUrlByShortUrlRepositorySpy
   }
 }
 
+export class LoadUrlByShortUrlRepositoryWithErrorSpy
+  implements LoadUrlByShortUrlRepository
+{
+  async load(input: string): Promise<Url | null> {
+    throw new Error()
+  }
+}
+
 export class AddUrlRepositorySpy implements AddUrlRepository {
   urlCount = 0
   url: Url = makeFakeUrl()
