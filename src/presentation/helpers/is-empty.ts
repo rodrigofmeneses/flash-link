@@ -1,3 +1,3 @@
-export const isEmpty = (obj: Record<string, any>): boolean => {
-  return Object.keys(obj).length === 0
+export const isEmpty = (obj: object | undefined): boolean => {
+  return !obj || Object.keys(obj).length === 0
 }

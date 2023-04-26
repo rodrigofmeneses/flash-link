@@ -4,11 +4,11 @@ import { HttpRequest } from "../helpers/http-request"
 import { HttpResponse } from "../helpers/http-response"
 import { isEmpty } from "../helpers/is-empty"
 
-export class ShortenUrl {
+export class ShortenUrlRoute {
   constructor(private readonly urlShorten: UrlShortener) {}
 
   async route(httpRequest: HttpRequest): Promise<HttpResponse> {
-    if (isEmpty(httpRequest.body) || !httpRequest.body.longUrl) {
+    if (isEmpty(httpRequest.body) || !httpRequest.body?.longUrl) {
       return {
         status: 400,
         error: new BadRequestError(),

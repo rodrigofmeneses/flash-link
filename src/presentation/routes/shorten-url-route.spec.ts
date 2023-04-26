@@ -8,7 +8,7 @@ import {
 import { BadRequestError } from "../errors/bad-request-error"
 import { HttpRequest } from "../helpers/http-request"
 import { UrlShortenerSpy } from "./mocks/spys"
-import { ShortenUrl } from "./shorten-url-route"
+import { ShortenUrlRoute } from "./shorten-url-route"
 
 const makeSut = () => {
   const urlShortener = new UrlShortenerSpy(
@@ -17,7 +17,7 @@ const makeSut = () => {
     new EncoderSpy(),
     new NumberGeneratorSpy()
   )
-  const sut = new ShortenUrl(urlShortener)
+  const sut = new ShortenUrlRoute(urlShortener)
   return { sut, urlShortener }
 }
 
