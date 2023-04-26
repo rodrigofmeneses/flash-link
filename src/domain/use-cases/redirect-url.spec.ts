@@ -1,3 +1,4 @@
+import { InvalidShortUrlError } from "../errors/invalid-short-url-error"
 import { makeFakeUrl } from "./mocks/fakes"
 import { EncoderSpy, LoadUrlByShortUrlRepositorySpy } from "./mocks/spys"
 import { UrlRedirector } from "./redirect-url"
@@ -17,7 +18,7 @@ describe("UrlRedirector", () => {
 
       const promise = sut.perform(shortUrl)
 
-      expect(promise).rejects.toThrow()
+      expect(promise).rejects.toThrow(new InvalidShortUrlError())
     })
   })
 

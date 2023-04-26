@@ -1,4 +1,5 @@
 import { LoadUrlByShortUrlRepository } from "../../infra/repositories/url-repository"
+import { InvalidShortUrlError } from "../errors/invalid-short-url-error"
 
 export class UrlRedirector {
   constructor(
@@ -7,7 +8,7 @@ export class UrlRedirector {
   async perform(shortUrl: string): Promise<string> {
     const url = await this.loadUrlByShortUrlRepository.load(shortUrl)
     if (!url) {
-      throw new Error()
+      throw new InvalidShortUrlError()
     }
     return url.longUrl
   }
