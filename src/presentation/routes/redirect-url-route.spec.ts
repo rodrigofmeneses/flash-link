@@ -8,6 +8,7 @@ import { HttpResponse } from "../helpers/http-response"
 import { isEmpty } from "../helpers/is-empty"
 import { LoadUrlByShortUrlRepository } from "../../infra/repositories/url-repository"
 import { Url } from "../../domain/models/url"
+import { makeFakeUrl } from "../../domain/use-cases/mocks/fakes"
 
 class RedirectUrlRoute {
   constructor(private urlRedirector: UrlRedirector) {}
@@ -16,7 +17,7 @@ class RedirectUrlRoute {
     if (isEmpty(httpRequest.param) || !httpRequest.param?.shortUrl) {
       return { status: 404, error: new NotFoundError() }
     }
-    const shortUrl = httpRequest.param?.shortUrl
+    const { shortUrl } = httpRequest.param
     let longUrl: string = ""
 
     try {
@@ -25,7 +26,6 @@ class RedirectUrlRoute {
       if (error instanceof InvalidShortUrlError) {
         return { status: 404, error: new NotFoundError() }
       }
-
       return { status: 500, error: new InternalServerError() }
     }
 
@@ -72,6 +72,22 @@ describe("RedirectUrlRoute", () => {
 
       expect(httpResponse.status).toBe(404)
       expect(httpResponse.error?.message).toBe(new NotFoundError().message)
+    })
+  })
+
+  describe("When valid shortUrl is provided", () => {
+    test("should success", async () => {
+      const { sut, loadUrlByShortUrlRepository } = makeSut()
+      const fakeUrl = makeFakeUrl()
+      loadUrlByShortUrlRepository.url = fakeUrl
+      const httpRequest: HttpRequest = {
+        param: { shortUrl: fakeUrl.shortUrl },
+      }
+
+      const httpResponse = await sut.route(httpRequest)
+
+      expect(httpResponse.status).toBe(200)
+      expect(httpResponse.data).toEqual({ longUrl: fakeUrl.longUrl })
     })
   })
 
