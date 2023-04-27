@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test": "jest --watch --runInBand --detectOpenHandles"
+    "test": "jest --watch --runInBand --detectOpenHandles",
+    "watch": "tsc -w",
+    "dev": "node --watch ./dist/main/index.js"
   },
   "keywords": [],
   "author": "Rodrigo Meneses",
