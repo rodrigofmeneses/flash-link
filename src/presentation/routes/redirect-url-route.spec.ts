@@ -54,7 +54,7 @@ describe("RedirectUrlRoute", () => {
 
       const httpResponse = await sut.route(httpRequest)
 
-      expect(httpResponse.status).toBe(200)
+      expect(httpResponse.status).toBe(302)
       expect(httpResponse.data).toEqual({ longUrl: fakeUrl.longUrl })
     })
   })

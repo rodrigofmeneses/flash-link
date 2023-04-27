@@ -10,7 +10,13 @@ export class ExpressRouteAdapter {
         params: req.params,
       }
       const httpResponse = await router(httpRequest)
-      res.status(httpResponse.status).send(httpResponse.data)
+
+      if (httpResponse.status === 302) {
+        const url = httpResponse.data?.longUrl as string
+        res.setHeader("location", url)
+        return res.status(httpResponse.status).redirect(url)
+      }
+      return res.status(httpResponse.status).send(httpResponse.data)
     }
   }
 }
