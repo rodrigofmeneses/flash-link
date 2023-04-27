@@ -5,6 +5,6 @@ import redirectUrlRoute from "../routes/redirect-url-route"
 export const setupRoutes = (app: Express) => {
   const router = Router()
   app.use("/api/v1", router)
-  app.use(redirectUrlRoute)
+  router.use(redirectUrlRoute)
   router.use(shortUrlRoute)
 }

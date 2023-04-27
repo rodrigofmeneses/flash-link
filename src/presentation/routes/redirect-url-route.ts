@@ -37,6 +37,6 @@ export class RedirectUrlRoute {
       }
     }
 
-    return { status: 302, data: { longUrl } }
+    return { status: 200, data: { longUrl } }
   }
 }

@@ -13,8 +13,6 @@ export class ExpressRouteAdapter {
 
       if (httpResponse.status === 302) {
         const url = httpResponse.data?.longUrl as string
-        res.setHeader("location", url)
-        return res.status(httpResponse.status).redirect(url)
       }
       return res.status(httpResponse.status).send(httpResponse.data)
     }
