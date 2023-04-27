@@ -34,6 +34,10 @@ export const inMemoryDisconnect = async (mongoServer: MongoMemoryServer) => {
   await mongoServer.stop()
 }
 
+export const cleanDb = async () => {
+  await UrlMongo.deleteMany()
+}
+
 export const UrlMongo = model<Url>("Url", urlSchema)
 
 export const connectMongo = async (uri: string) => {
