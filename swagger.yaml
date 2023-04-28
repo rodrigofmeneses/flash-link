@@ -1,0 +1,84 @@
+openapi: 3.0.3
+info:
+  title: Flash Url API
+  description: This is a simple url shortener API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:7777
+
+tags:
+  - name: shortener
+    description: Url shortener service
+
+paths:
+  /api/v1/shorten:
+    post:
+      tags:
+        - shortener
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LongUrl"
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShortUrl"
+        400:
+          description: Invalid body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/{shortUrl}:
+    get:
+      tags:
+        - shortener
+      parameters:
+        - name: shortUrl
+          in: path
+          description: Shortened url
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShortUrl"
+        404:
+          description: Url not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    LongUrl:
+      type: object
+      properties:
+        longUrl:
+          type: string
+          example: https://pt.wikipedia.org/wiki/URL
+
+    ShortUrl:
+      type: object
+      properties:
+        longUrl:
+          type: string
+          example: o3WO41
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Page Not Found
