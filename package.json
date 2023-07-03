@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "test": "jest --watch --runInBand --detectOpenHandles",
+    "test:ci": "jest --runInBand --verbose",
     "watch": "tsc -w",
     "dev": "node --watch ./dist/main/index.js",
     "build": "tsc",
